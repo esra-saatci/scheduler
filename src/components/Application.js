@@ -44,11 +44,9 @@ export default function Application(props) {
 
     const nullAppointment = {
       ...state.appointments[id],
-      interview: {...state.appointments[id].interview}
+      interview: null
     }
   
-    nullAppointment.interview.interviewer = null;
-    nullAppointment.interview.student = null;
   
     const appointments = {
       ...state.appointments,
@@ -65,15 +63,14 @@ export default function Application(props) {
   }
 
   const appointmentList = appointments.map((appointment) => {
-    const interview = getInterview(state, appointment.interview)
   
     return (
       <Appointment
         key={appointment.id}
         id={appointment.id}
         time={appointment.time}
-        interview={interview}
-        interviewers={getInterviewersForDay(state, state.day)}
+        interview={getInterview(state, appointment.interview)}
+        interviewers={interviewers}
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
       />

@@ -7,6 +7,7 @@ import Show from "components/Appointment/Show";
 import Form from "components/Appointment/Form";
 import Status from "components/Appointment/Status"
 import Confirm from "components/Appointment/Confirm"
+import Error from "components/Appointment/Error";
 
 export default function Appointment(props) {
  
@@ -14,6 +15,9 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const ERROR_SAVE = "SAVING_ERROR";
+  const ERROR_MISSING_INFO = "MISSING INFO ERROR";
+  const ERROR_DELETE = "DELETING_ERROR";
   const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
   const EDIT = "EDITING";
@@ -27,28 +31,39 @@ export default function Appointment(props) {
     const interview = {
       student: name,
       interviewer
+      
     };
 
-    props.bookInterview(props.id, interview)
-    .then(response => {
-      transition(SHOW);
-    })
-
+    if(!interview.interviewer || !interview.student){
+      transition(ERROR_MISSING_INFO, true)
+    } else {
+      props.bookInterview(props.id, interview)
+      .then(response => {
+        transition(SHOW);
+      })
+      .catch(error => {
+        transition(ERROR_SAVE, true);
+      })
+    }
   };
+
 
   function confirmation() {
     transition(CONFIRM);
   }
 
   function cancel() {
-    transition(DELETING);
+    transition(DELETING, true);
 
     props.cancelInterview(props.id)
     .then(response => {
       transition(EMPTY);
     })
+    .catch(error => {
+      transition(ERROR_DELETE, true);
+    })
   }
-
+  
   return (
     <article className="appointment">
     <Header time={props.time}/>
@@ -85,6 +100,22 @@ export default function Appointment(props) {
           onConfirm={cancel}
         />
         )}
+        {mode === ERROR_DELETE && (
+          <Error message= 'Error deleting appointment'
+          onClose={() => back()}
+          />
+        )}
+        {mode === ERROR_SAVE && (
+          <Error message= 'Error saving appointment'
+          onClose={() => back()}
+          />
+        )}
+        {mode === ERROR_MISSING_INFO &&(
+          <Error message= 'Please ensure to include both your name and a selected interviewer'
+          onClose={() => back()}
+          />
+        )}
+
   </article>
   )
 };
