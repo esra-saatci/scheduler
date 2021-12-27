@@ -26,7 +26,7 @@ The project runs paired with an API server and a regenerating database via Postg
 
 ## Dashboard
 
-!["Dashboard"] (https://github.com/esra-saatci/scheduler/blob/master/Docs/Dashboard.png?raw=true)
+!["Dashboard"](https://github.com/esra-saatci/scheduler/blob/master/Docs/Dashboard.png?raw=true)
 
 ## Creating Appointment
 
